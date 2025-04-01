@@ -22,11 +22,16 @@ app.use('/uploads', express.static(__dirname + '/uploads'));
 mongoose.connect('mongodb+srv://laserbeam:Fitzjames7904@cluster0.6hm3f.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
 
 app.post('/register', async (req,res) => {
-    const {username, password} = req.body; 
+    const {username, password, firstName, lastName, passwordHint, email, nationality} = req.body; 
     try {
         const UserDoc = await User.create({
             username,
             password:bcrypt.hashSync(password,salt),
+            firstName,
+            lastName,
+            email,
+            passwordHint,
+            nationality,
         });
         res.json(UserDoc);
     } catch (e) {
@@ -106,20 +111,30 @@ app.put('/post', uploadMiddleware.single('file'), async (req,res) => {
         fs.renameSync(path, newPath);
     }
     const {token} = req.cookies;
+    if (!token){
+        return res.status(401).json("Not logged in")
+    }
     jwt.verify(token, secret, {}, async (err, info) => {
         if (err) throw err;
         const {id, title, summary, content } = req.body;
         const postDoc = await Post.findById(id);
         const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
-        if(!isAuthor) {
+        if(!postDoc){
+            return res.status(404).json('Post not found');
+        }
+        if(!postDoc.author.equals(info.id)) {
             return res.status(400).json('Only the author of the post can make edits')
         }
-        await postDoc.update({
+        const updatedPost = await Post.findByIdAndUpdate(
+            id,
+            {
             title, 
             content, 
             summary,
             cover: newPath ? newPath : postDoc.cover,
-        });
+        },
+        {new : true}
+    );
         res.json(postDoc);
     });
 });
