@@ -1,3 +1,14 @@
+/* KEYFRAMES LOGIC IS FOR ERROR TEXT ONLY */
+@keyframes fadeFromWhite {
+  0% {
+    color: white;
+  }
+  100% {
+    color: red;
+  }
+}
+/* KEYFRAMES LOGIC IS FOR ERROR TEXT ONLY */
+
 *{
   box-sizing: border-box;
 }
@@ -211,4 +222,16 @@ form.login h1, form.register h1 {
   border: 1px solid #ddd !important;
   border-radius: 10px !important;
   padding: 8px 12px !important;
+}
+
+.error-msg {
+  animation: fadeFromWhite 0.25s ease-in;
+  color: red;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  text-align: center;
+  font-weight: 500;
+  font-style: bold;
+  padding: 8px;
+  border-radius: 4px;
 }

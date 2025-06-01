@@ -33,6 +33,7 @@ return (
         <>
         <span>Hello {username}!</span>
         <Link to="/create">Create New Post</Link>
+        <Link to={`/profile/${userInfo.id}`}>Profile</Link>
         <a onClick={logout}>Logout</a>
         </>
       )}

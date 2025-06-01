@@ -42,6 +42,11 @@ app.post('/register', async (req,res) => {
 app.post('/login', async (req, res) => {
     const {username, password} = req.body;
     const UserDoc = await User.findOne({username});
+
+    if (!UserDoc) {
+        return res.status(400).json('Username Not Found');
+    }
+
     const passCheck = bcrypt.compareSync(password, UserDoc.password);
     if(passCheck) {
         jwt.sign({username, id:UserDoc._id}, secret, {}, (err, token) => {
@@ -53,9 +58,13 @@ app.post('/login', async (req, res) => {
 
         });
     }
-    else {
-        res.status(400).json('Credentials are incorrect');
+
+    if (!passCheck) {
+        return res.status(400).json('Incorrect Password');
     }
+    // else {
+    //     res.status(400).json('password check is not functioning');
+    // }
 });
 
 app.get('/profile', (req,res) => {
@@ -153,7 +162,18 @@ app.get('/post/:id', async(req, res) => {
     const {id} = req.params;
     const postDoc = await Post.findById(id).populate('author', ['username']);
     res.json(postDoc);
-})
+});
+
+app.get('/profile/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+      const user = await User.findById(id, { password: 0 });
+      if (!user) return res.status(404).json({ message: "User not found" });
+      res.json(user);
+    } catch (err) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
 
 app.listen('4000')
 //mongodb+srv://laserbeam:Fitzjames7904@cluster0.6hm3f.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
