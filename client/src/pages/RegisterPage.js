@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ReactFlagsSelect from "react-flags-select";
 
 export default function RegisterPage() {
@@ -10,18 +11,43 @@ export default function RegisterPage() {
   const [lastName, setLastName] = useState("");
   const [passwordHint, setPasswordHint] = useState("");
   const [nationality, setNationality] = useState(null);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+  const navigate = useNavigate();
 
   async function register(ev) {
     ev.preventDefault();
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,20}$/;
+    if (!passwordRegex.test(password)) {
+      setErrorMsg(
+        "Password must be 8–20 characters long and include at least one uppercase letter, one lowercase letter, and one number."
+      );
+      return;
+    }
     const response = await fetch("http://localhost:4000/register", {
       method: "POST",
-      body: JSON.stringify({ username, password, firstName, lastName, email, nationality, passwordHint }),
+      body: JSON.stringify({
+        username,
+        password,
+        firstName,
+        lastName,
+        email,
+        nationality,
+        passwordHint,
+      }),
       headers: { "Content-Type": "application/json" },
     });
     if (response.status !== 200) {
-      alert("Registration failed");
+      const errorText = await response.text();
+      setErrorMsg(errorText || "Registration failed");
     } else {
-      alert("Registration successful");
+      setSuccessMsg("Registration successful! Redirecting you to the home page...");
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
     }
   }
 
@@ -116,15 +142,17 @@ export default function RegisterPage() {
         onChange={(e) => setLastName(e.target.value)}
       />
       <div className="flags-wrapper">
-      <ReactFlagsSelect
-        selected={nationality}
-        onSelect={(code) => setNationality(code)}
-        searchable
-        placeholder="Select Nationality (Optional)"
-      />
+        <ReactFlagsSelect
+          selected={nationality}
+          onSelect={(code) => setNationality(code)}
+          searchable
+          placeholder="Select Nationality (Optional)"
+        />
       </div>
       <br></br>
       <button>Register</button>
+      {errorMsg && <div className="error-msg">{errorMsg}</div>}
+      {successMsg && <div className="success-msg">{successMsg}</div>}
     </form>
   );
 }

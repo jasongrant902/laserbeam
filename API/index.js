@@ -60,7 +60,7 @@ app.post('/login', async (req, res) => {
     }
 
     if (!passCheck) {
-        return res.status(400).json('Incorrect Password');
+        return res.status(401).json({ error: 'Incorrect Password', passwordHint: UserDoc.passwordHint || null });
     }
     // else {
     //     res.status(400).json('password check is not functioning');

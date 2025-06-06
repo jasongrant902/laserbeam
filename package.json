@@ -1,0 +1,12 @@
+{
+  "name": "secret-stage",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "client": "cd client && npm start",
+    "server": "cd API && nodemon index.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

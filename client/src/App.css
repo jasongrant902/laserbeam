@@ -1,13 +1,46 @@
-/* KEYFRAMES LOGIC IS FOR ERROR TEXT ONLY */
-@keyframes fadeFromWhite {
+/* KEYFRAMES LOGIC FOR ERROR MESSAGES */
+@keyframes fadeInError {
   0% {
     color: white;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
   }
   100% {
-    color: red;
+    color: #d9534f;
   }
 }
-/* KEYFRAMES LOGIC IS FOR ERROR TEXT ONLY */
+/* KEYFRAMES LOGIC FOR ERROR MESSAGES */
+
+/* KEYFRAME LOGIC FOR SUCCESS MESSAGES */
+
+@keyframes fadeInSuccess {
+  0% {
+    color: white;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    color: #28a745;
+  }
+}
+
+/* KEYFRAME LOGIC FOR SUCCESS MESSAGES */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@font-face {
+  font-family: 'Zector';
+  src: url('./assets/fonts/Zector.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
 *{
   box-sizing: border-box;
@@ -23,6 +56,10 @@ main {
   margin: 0 auto;
 }
 
+body {
+  font-family: 'Zector', sans-serif;
+}
+
 header {
   display: flex;
   justify-content: space-between;
@@ -36,6 +73,8 @@ img {
 }
 
 header a {
+  font-family: "Zector";
+  font-weight: bold;
   text-decoration: none;
   color: inherit;
 }
@@ -225,13 +264,36 @@ form.login h1, form.register h1 {
 }
 
 .error-msg {
-  animation: fadeFromWhite 0.25s ease-in;
-  color: red;
-  margin-top: 10px;
-  font-size: 0.9rem;
-  text-align: center;
+  color: #d9534f; /* Bootstrap-like red */
   font-weight: 500;
-  font-style: bold;
-  padding: 8px;
-  border-radius: 4px;
+  margin-top: 10px;
+  text-align: center;
+  animation: fadeInError 0.5s ease-out;
+  white-space: pre-wrap;
+}
+
+.success-msg {
+  color: #28a745; /* Bootstrap-like green */
+  font-weight: 500;
+  margin-top: 10px;
+  text-align: center;
+  animation: fadeInSuccess 0.5s ease-out;
+  white-space: pre-wrap;
+}
+
+.hint-bubble {
+  animation: fadeIn 0.4s ease-in-out;
+  margin-top: 10px;
+  background-color: #f0f8ff;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #333;
+  text-align: center;
+  cursor: pointer;
+}
+
+.hint-bubble:hover {
+  background-color: #20b1e1;
 }
