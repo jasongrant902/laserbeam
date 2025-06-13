@@ -1,6 +1,6 @@
 import "./App.css";
 import Post from "./Post.js";
-import Header from "./Header.js";
+import Header from "./components/Header/Header"
 import { Routes, Route } from "react-router-dom";
 import Layout from "./Layout.js";
 import HomePage from "./pages/HomePage.js";

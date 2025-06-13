@@ -1,0 +1,127 @@
+.registerForm {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.heading {
+  text-align: center;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  padding: 5px;
+  margin: 5px 7px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.button {
+  width: 100%;
+  display: block;
+  background-color: #20b1e1;
+  border: 0;
+  color: #fff;
+  border-radius: 5px;
+  padding: 7px 0;
+  cursor: pointer;
+}
+
+.showBtn {
+  width: 40px;
+  height: 40px;
+  background-color: #20b1e1;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.eyeIcon {
+  width: 24px;
+  height: 24px;
+  stroke: white;
+}
+
+.errorMsg {
+  color: #d9534f;
+  font-weight: 500;
+  margin-top: 10px;
+  text-align: center;
+  animation: fadeInError 0.5s ease-out;
+  white-space: pre-wrap;
+}
+
+.successMsg {
+  color: #28a745;
+  font-weight: 500;
+  margin-top: 10px;
+  text-align: center;
+  animation: fadeInSuccess 0.5s ease-out;
+  white-space: pre-wrap;
+}
+
+.hintBubble {
+  animation: fadeIn 0.4s ease-in-out;
+  margin-top: 10px;
+  background-color: #f0f8ff;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #333;
+  text-align: center;
+  cursor: pointer;
+}
+
+.hintBubble:hover {
+  background-color: #20b1e1;
+}
+
+.loginHeadline {
+  text-align: center;
+}
+
+.loginLinks {
+  margin-top: 20px;
+  text-align: center;
+  font-size: smaller;
+}
+
+.signupLink {
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.signupLink:hover {
+  text-decoration: underline;
+}
+
+.passwordContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.passwordContainer input {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.flagsWrapper {
+  width: 100%;
+  margin: 5px 7px;
+}
+
+.flagsWrapper > div {
+  width: 100% !important;
+}
+
+.flagsWrapper button {
+  border: 1px solid #ddd !important;
+  border-radius: 10px !important;
+  padding: 8px 12px !important;
+}

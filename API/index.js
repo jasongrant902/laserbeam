@@ -42,32 +42,38 @@ app.post('/register', async (req,res) => {
 });
 
 app.post('/login', async (req, res) => {
-    const {username, password} = req.body;
-    const UserDoc = await User.findOne({username});
+  const { username, password } = req.body;
+
+  try {
+    const UserDoc = await User.findOne({ username });
 
     if (!UserDoc) {
-        return res.status(400).json('Username Not Found');
+      return res.status(404).json({ error: "User not found" });
     }
 
     const passCheck = bcrypt.compareSync(password, UserDoc.password);
-    if(passCheck) {
-        jwt.sign({username, id:UserDoc._id}, secret, {}, (err, token) => {
-            if (err) throw err;
-            res.cookie('token', token).json({
-                id:UserDoc._id,
-                username,
-            });
-
-        });
-    }
 
     if (!passCheck) {
-        return res.status(401).json({ error: 'Incorrect Password', passwordHint: UserDoc.passwordHint || null });
+      return res.status(401).json({
+        error: "Incorrect password",
+        passwordHint: UserDoc.passwordHint || null,
+      });
     }
-    // else {
-    //     res.status(400).json('password check is not functioning');
-    // }
+
+    jwt.sign({ username, id: UserDoc._id }, secret, {}, (err, token) => {
+      if (err) throw err;
+      res.cookie("token", token).json({
+        id: UserDoc._id,
+        username,
+      });
+    });
+
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
+
 
 app.get('/profile', (req,res) => {
     const {token} = req.cookies;

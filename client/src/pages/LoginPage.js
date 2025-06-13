@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { UserContext } from "../userContext";
+import styles from './LoginPage.module.css';
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -9,7 +10,7 @@ export default function LoginPage() {
   const [errorMsg, setErrorMsg] = useState("");
   const [passwordHint, setPasswordHint] = useState("");
   const [showHint, setShowHint] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // <--- added here
+  const [showPassword, setShowPassword] = useState(false);
   const { setUserInfo } = useContext(UserContext);
 
   async function login(ev) {
@@ -31,22 +32,23 @@ export default function LoginPage() {
       });
     } else {
       const result = await response.json();
-      if (result.passwordHint) {
-        setErrorMsg("Incorrect Password")
-        setPasswordHint(result.passwordHint);
+      if (result.error === "User not found") {
+        setErrorMsg("User not found");
+      } else if (result.error === "Incorrect password") {
+        setErrorMsg("Incorrect password");
+        setPasswordHint(result.passwordHint || "");
       } else {
-        setErrorMsg(result.error || "Login failed");
+        setErrorMsg(`Unknown Error: ${result.error || "No details"}`);
       }
-      console.log("Login error response:", result);
     }
   }
 
   if (redirect) {
-    return <Navigate to={"/"}></Navigate>;
+    return <Navigate to="/" />;
   }
 
   return (
-    <form className="login" onSubmit={login}>
+    <form className={styles.login} onSubmit={login}>
       <h1>Login</h1>
 
       <input
@@ -56,7 +58,7 @@ export default function LoginPage() {
         onChange={(ev) => setUsername(ev.target.value)}
       />
 
-      <div className="password-container">
+      <div className={styles["password-container"]}>
         <input
           type={showPassword ? "text" : "password"}
           placeholder="Password"
@@ -65,7 +67,7 @@ export default function LoginPage() {
         />
         <button
           type="button"
-          className="show-btn"
+          className={styles["show-btn"]}
           onMouseDown={() => setShowPassword(true)}
           onMouseUp={() => setShowPassword(false)}
           onMouseLeave={() => setShowPassword(false)}
@@ -77,7 +79,7 @@ export default function LoginPage() {
               viewBox="0 0 24 24"
               strokeWidth="1.5"
               stroke="currentColor"
-              className="eye-icon"
+              className={styles["eye-icon"]}
             >
               <path
                 strokeLinecap="round"
@@ -98,7 +100,7 @@ export default function LoginPage() {
               viewBox="0 0 24 24"
               strokeWidth="1.5"
               stroke="currentColor"
-              className="eye-icon"
+              className={styles["eye-icon"]}
             >
               <path
                 strokeLinecap="round"
@@ -117,18 +119,24 @@ export default function LoginPage() {
 
       <button type="submit">Login</button>
 
-      {errorMsg && <p className="error-msg">{errorMsg}</p>}
+      <div className={styles["login-links"]}>
+        <Link to="/register" className={styles["signup-link"]}>
+          New to Laserbeam? Click here to sign up
+        </Link>
+      </div>
 
-       {passwordHint && (
-          <div
-            className="hint-bubble"
-            onMouseDown={() => setShowHint(true)}
-            onMouseUp={() => setShowHint(false)}
-            onMouseLeave={() => setShowHint(false)}
-          >
-            {showHint ? passwordHint : "💡 Need a hint?"}
-          </div>
-        )}
+      {errorMsg && <p className={styles["error-msg"]}>{errorMsg}</p>}
+
+      {passwordHint && (
+        <div
+          className={styles["hint-bubble"]}
+          onMouseDown={() => setShowHint(true)}
+          onMouseUp={() => setShowHint(false)}
+          onMouseLeave={() => setShowHint(false)}
+        >
+          {showHint ? passwordHint : "💡 Need a hint?"}
+        </div>
+      )}
     </form>
   );
 }
