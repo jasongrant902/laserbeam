@@ -13,6 +13,7 @@ export default function RegisterPage() {
   const [passwordHint, setPasswordHint] = useState("");
   const [nationality, setNationality] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
+  const {errorIcon, setErrorIcon} = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const navigate = useNavigate();
 

@@ -27,7 +27,7 @@ export default function PostPage() {
       </time>
       <div className={styles.author}>by {postInfo.author.username}</div>
 
-      {userInfo.id === postInfo.author._id && (
+      {userInfo && userInfo.id === postInfo.author._id && (
         <div className={styles.editRow}>
           <Link className={styles.editBtn} to={`/edit/${postInfo._id}`}>
             <svg

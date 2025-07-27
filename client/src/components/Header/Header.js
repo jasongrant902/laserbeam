@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../../userContext";
 import styles from "./Header.module.css";
 
-export default function Header() {
+export default function Header({ onLogoutClick }) {
   const { setUserInfo, userInfo } = useContext(UserContext);
 
   useEffect(() => {
@@ -14,15 +14,7 @@ export default function Header() {
         setUserInfo(userInfo);
       });
     });
-  }, []);
-
-  function logout() {
-    fetch("http://localhost:4000/logout", {
-      credentials: "include",
-      method: "POST",
-    });
-    setUserInfo(null);
-  }
+  }, [setUserInfo]);
 
   const username = userInfo?.username;
 
@@ -36,7 +28,7 @@ export default function Header() {
           <>
             <Link to="/create">Create New Post</Link>
             <Link to={`/profile/${userInfo.id}`}>Profile</Link>
-            <a onClick={logout}>Logout</a>
+            <a onClick={onLogoutClick}>Logout</a>
           </>
         ) : (
           <>
@@ -48,3 +40,4 @@ export default function Header() {
     </header>
   );
 }
+

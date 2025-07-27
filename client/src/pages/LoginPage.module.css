@@ -13,6 +13,53 @@ input {
   border-radius: 10px;
 }
 
+.error-icon {
+  position: absolute;
+  left: 0.5rem;
+  color: red;
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.input-group .error-icon {
+  font-size: 1rem;
+  color: red;
+}
+
+.input-group input {
+  flex: 1;
+  padding-left: 0.5rem;
+}
+
+.input-with-eye {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-with-eye input {
+  flex: 1;
+}
+
+.show-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 0.5rem;
+}
+
+.eye-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #333;
+}
+
 button {
   width: 100%;
   display: block;
@@ -46,7 +93,7 @@ form.login h1 {
 }
 
 .error-msg {
-  color: #d9534f; /* Bootstrap-like red */
+  color: #d9534f;
   font-weight: 500;
   margin-top: 10px;
   text-align: center;
