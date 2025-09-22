@@ -1,25 +1,37 @@
-header {
+.header {
+  background-color: black;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.headerContent {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 20px 0;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 50px;
   align-items: center;
-  margin-top: 20px;
 }
 
-header a {
-  font-family: "Zector";
-  font-weight: bold;
-  text-decoration: none;
-  color: inherit;
-}
-
-header a.logo {
+.logo {
+  font-family: "Nexa-Heavy";
   font-weight: bold;
   font-size: 1.4rem;
+  text-decoration: none;
+  color: white;
 }
 
-header nav {
+.nav {
   display: flex;
   gap: 15px;
 }
+
+.nav a {
+  font-family: "Nexa-Heavy";
+  font-weight: bold;
+  text-decoration: none;
+  color: white;
+}
+
 

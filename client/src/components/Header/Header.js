@@ -20,24 +20,25 @@ export default function Header({ onLogoutClick }) {
 
   return (
     <header className={styles.header}>
-      <Link to="/" className={styles.logo}>
-        Laserbeam
-      </Link>
-      <nav className={styles.nav}>
-        {username ? (
-          <>
-            <Link to="/create">Create New Post</Link>
-            <Link to={`/profile/${userInfo.id}`}>Profile</Link>
-            <a onClick={onLogoutClick}>Logout</a>
-          </>
-        ) : (
-          <>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
-          </>
-        )}
-      </nav>
+      <div className={styles.headerContent}>
+        <Link to="/" className={styles.logo}>
+          Laserbeam
+        </Link>
+        <nav className={styles.nav}>
+          {username ? (
+            <>
+              <Link to="/create">Create New Post</Link>
+              <Link to={`/profile/${userInfo.id}`}>Profile</Link>
+              <a onClick={onLogoutClick}>Logout</a>
+            </>
+          ) : (
+            <>
+              <Link to="/login">Login</Link>
+              <Link to="/register">Register</Link>
+            </>
+          )}
+        </nav>
+      </div>
     </header>
   );
 }
-

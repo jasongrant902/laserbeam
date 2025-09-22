@@ -6,6 +6,7 @@ const User = require("./models/users");
 const Post = require("./models/post");
 const app = express();
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
@@ -14,10 +15,16 @@ const fs = require("fs");
 const dotenv = require("dotenv");
 const verifyToken = require('./middleware/authenticateToken');
 const authorizeRoles = require('./middleware/authRoles');
+const nodemailer = require("nodemailer");
 dotenv.config();
 
 const salt = bcrypt.genSaltSync(10);
 const secret = "8502mskp2k4jal2398jfa;kdjv053";
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
@@ -93,6 +100,48 @@ app.post("/login", async (req, res) => {
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const token = crypto.randomBytes(32).toString("hex");
+    const expiration = Date.now() + 3600000;
+
+    user.resetPasswordToken = crypto.createHash("sha256").update(token).digest("hex");
+    user.resetPasswordExpires = new Date(expiration);
+    await user.save();
+
+    const resetLink = `http://localhost:3000/reset-password?token=${token}&email=${encodeURIComponent(email)}`;
+
+    const transporter = nodemailer.createTransport({
+      host: "smtp.resend.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: "resend",
+        pass: process.env.RESEND_API_KEY,
+      }
+    });
+
+    const mailOptions = {
+      to: email,
+      from: "no-reply@laserbeam.gg",
+      subject: "Laserbeam Password Reset",
+      html: `<p>Click the link to reset your password:</p><a href="${resetLink}">${resetLink}</a>`,
+};
+
+  await transporter.sendMail(mailOptions);
+
+     res.json({ message: "Reset link sent to email" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -201,5 +250,3 @@ app.get("/profile/:id", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
-app.listen("4000");

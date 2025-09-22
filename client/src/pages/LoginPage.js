@@ -133,8 +133,12 @@ export default function LoginPage() {
       <button type="submit">Login</button>
 
       <div className={styles["login-links"]}>
-        <Link to="/register" className={styles["signup-link"]}>
+        <Link to="/register" className={styles["loginpage-link"]}>
           New to Laserbeam? Click here to sign up
+        </Link>
+        <br />
+        <Link to="/forgot-password" className={styles["loginpage-link"]}>
+        Forgot Password?
         </Link>
       </div>
 

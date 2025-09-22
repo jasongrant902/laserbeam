@@ -33,13 +33,14 @@ export default function Layout() {
         </div>
       )}
 
+      <Header onLogoutClick={() => setShowLogoutConfirm(true)} />
+
       <div
         className={`${styles.pageWrapper} ${
           showLogoutConfirm ? styles.blurred : ""
         }`}
       >
         <div className={styles.contentContainer}>
-          <Header onLogoutClick={() => setShowLogoutConfirm(true)} />
           <Outlet />
         </div>
       </div>

@@ -137,13 +137,13 @@ form.login h1 {
   font-size: smaller;
 }
 
-.signup-link {
+.loginpage-link {
   color: #4f46e5;
   text-decoration: none;
   font-weight: bold;
 }
 
-.signup-link:hover {
+.loginpage-link:hover {
   text-decoration: underline;
 }
 

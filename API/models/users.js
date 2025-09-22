@@ -13,7 +13,9 @@ const UserSchema = new Schema({
         type: String,
         enum: ['user', 'contributor', 'admin'],
         default: 'user',
-    }
+    },
+    resetPasswordToken: { type: String, required: false, default: null},
+    resetPasswordExpires: {type: Date, required: false, default: null}
 })
 
 const UserModel = model('User', UserSchema);
