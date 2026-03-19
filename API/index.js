@@ -19,7 +19,7 @@ const nodemailer = require("nodemailer");
 dotenv.config();
 
 const salt = bcrypt.genSaltSync(10);
-const secret = "8502mskp2k4jal2398jfa;kdjv053";
+const secret = process.env.JWT_SECRET || "8502mskp2k4jal2398jfa;kdjv053";
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
@@ -145,49 +145,34 @@ app.post('/forgot-password', async (req, res) => {
   }
 });
 
-app.get("/profile", (req, res) => {
-  const { token } = req.cookies;
-  if (!token) {
-    return res.status(401).json({ message: "no token provided" });
-  }
-
-  jwt.verify(token, secret, {}, (err, info) => {
-    if (err) {
-      return res.status(401).json({ message: "Invalid token" });
-    }
-    res.json(info);
-  });
+app.get("/profile", verifyToken, (req, res) => {
+  res.json(req.user);
 });
 
 app.post("/logout", (req, res) => {
   res.cookie("token", "").json("ok");
 });
 
-app.post("/create", uploadMiddleware.single("file"), async (req, res) => {
+app.post("/create", verifyToken, uploadMiddleware.single("file"), async (req, res) => {
   const { originalname, path } = req.file;
   const parts = originalname.split(".");
   const extension = parts[parts.length - 1];
   const newPath = path + "." + extension;
   fs.renameSync(path, newPath);
 
-  const { token } = req.cookies;
-  jwt.verify(token, secret, {}, async (err, info) => {
-    if (err) throw err;
-
-    const { title, summary, content } = req.body;
-    const postDoc = await Post.create({
-      title,
-      summary,
-      content,
-      cover: newPath,
-      author: info.id,
-    });
-
-    res.json({ postDoc });
+  const { title, summary, content } = req.body;
+  const postDoc = await Post.create({
+    title,
+    summary,
+    content,
+    cover: newPath,
+    author: req.user.id,
   });
+
+  res.json({ postDoc });
 });
 
-app.put("/update", uploadMiddleware.single("file"), async (req, res) => {
+app.put("/update", verifyToken, uploadMiddleware.single("file"), async (req, res) => {
   let newPath = null;
   if (req.file) {
     const { originalname, path } = req.file;
@@ -196,33 +181,28 @@ app.put("/update", uploadMiddleware.single("file"), async (req, res) => {
     newPath = path + "." + extension;
     fs.renameSync(path, newPath);
   }
-  const { token } = req.cookies;
-  if (!token) {
-    return res.status(401).json("Not logged in");
+  
+  const { id, title, summary, content } = req.body;
+  const postDoc = await Post.findById(id);
+  
+  if (!postDoc) {
+    return res.status(404).json("Post not found");
   }
-  jwt.verify(token, secret, {}, async (err, info) => {
-    if (err) throw err;
-    const { id, title, summary, content } = req.body;
-    const postDoc = await Post.findById(id);
-    const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
-    if (!postDoc) {
-      return res.status(404).json("Post not found");
-    }
-    if (!postDoc.author.equals(info.id)) {
-      return res.status(400).json("Only the author of the post can make edits");
-    }
-    const updatedPost = await Post.findByIdAndUpdate(
-      id,
-      {
-        title,
-        content,
-        summary,
-        cover: newPath ? newPath : postDoc.cover,
-      },
-      { new: true }
-    );
-    res.json(postDoc);
-  });
+  if (!postDoc.author.equals(req.user.id)) {
+    return res.status(400).json("Only the author of the post can make edits");
+  }
+  
+  const updatedPost = await Post.findByIdAndUpdate(
+    id,
+    {
+      title,
+      content,
+      summary,
+      cover: newPath ? newPath : postDoc.cover,
+    },
+    { new: true }
+  );
+  res.json(updatedPost);
 });
 
 app.get("/post", async (req, res) => {
