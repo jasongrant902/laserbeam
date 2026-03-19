@@ -19,11 +19,14 @@ const nodemailer = require("nodemailer");
 dotenv.config();
 
 const salt = bcrypt.genSaltSync(10);
-const secret = process.env.JWT_SECRET || "8502mskp2k4jal2398jfa;kdjv053";
+const secret = process.env.JWT_SECRET || "development_token";
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  if (secret === "development_token") {
+    console.warn("WARNING: Development token fallback in use, check environment variables.");
+  }
 });
 
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
